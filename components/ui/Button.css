@@ -1,0 +1,141 @@
+/* Button Component Styles */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 900;
+  letter-spacing: 0.025em;
+  border-radius: 18px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.btn:focus {
+  outline: 2px solid #B28B53;
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Variants */
+.btn-primary {
+  background-color: #B28B53;
+  color: white;
+  box-shadow: 0 10px 15px -3px rgba(178, 139, 83, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: rgba(178, 139, 83, 0.9);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 2px solid #d1d5db;
+  color: #111827;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: #B28B53;
+  color: #B28B53;
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: #111827;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+/* Sizes */
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.btn-md {
+  padding: 12px 24px;
+  font-size: 16px;
+}
+
+.btn-lg {
+  padding: 32px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.btn-hero-pill {
+  padding: 8px 12px;
+  font-size: 12px;
+  border-radius: 16px;
+}
+
+.btn-hero-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* Loading Spinner */
+.btn-spinner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btn-spinner-circle {
+  opacity: 0.25;
+}
+
+.btn-spinner-path {
+  opacity: 0.75;
+}
+
+/* Icon containers */
+.btn-icon-left {
+  display: flex;
+  align-items: center;
+}
+
+.btn-icon-right {
+  display: flex;
+  align-items: center;
+}
+
+.btn-hero-pill .btn-icon-left {
+  margin-right: 8px;
+}
+
+.btn-hero-pill .btn-icon-right {
+  margin-left: 8px;
+}
+
+.btn-text-hidden {
+  visibility: hidden;
+}

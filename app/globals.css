@@ -1,26 +1,118 @@
-@import "tailwindcss";
+/* Removed Tailwind CSS import - using internal stylesheets instead */
 
+/* Custom CSS Variables for Beautcia Brand Colors */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand Colors (from Beautcia mobile app) */
+  --color-primary: #000000;
+  --color-secondary: #B28B53; /* Gold/Bronze - MAIN BRAND COLOR */
+  --color-accent: #B28B53; /* Using brand gold/bronze */
+  --color-accent-light: #D4A574; /* Lighter gold variant */
+  
+  /* Light Mode - Using brand color and white */
+  --background: #FFFFFF; /* White background */
+  --foreground: #11181C; /* Dark text for contrast */
+  --surface: #FFFFFF; /* White surface elements */
+  --surface-secondary: #F0F2F5;
+  
+  /* Dark Mode - Disabled for light theme only */
+  --background-dark: #151718;
+  --foreground-dark: #ECEDEE;
+  --surface-dark: #151718;
+  --surface-secondary-dark: #21262D;
 }
+
+/* Removed dark mode media query to force light theme */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-secondary: #B28B53;
+  --color-accent: #B28B53; /* Brand gold/bronze */
+  --color-accent-light: #D4A574;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Force light theme by default */
+html {
+  color-scheme: light;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Typography Utilities */
+.text-gradient {
+  background: linear-gradient(90deg, #B28B53, #D4A574); /* Gold gradient */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+}
+
+.dark .glass {
+  background: rgba(37, 41, 47, 0.8);
+}
+
+/* Animation Utilities */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+.animate-float {
+  animation: float 6.4s ease-in-out infinite;
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #B28B53; /* Brand gold/bronze */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D4A574; /* Lighter gold on hover */
 }

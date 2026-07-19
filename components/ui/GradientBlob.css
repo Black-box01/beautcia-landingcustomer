@@ -1,0 +1,47 @@
+/* GradientBlob Component Styles */
+.gradient-blob {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+.gradient-blob-blur {
+  filter: blur(60px);
+}
+
+.gradient-blob-small {
+  width: 220px;
+  height: 220px;
+}
+
+.gradient-blob-medium {
+  width: 300px;
+  height: 300px;
+}
+
+.gradient-blob-large {
+  width: 380px;
+  height: 380px;
+}
+
+.gradient-blob-orbit {
+  animation: blob-orbit var(--orbit-duration, 30s) linear infinite;
+}
+
+@keyframes blob-orbit {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(100px, 100px);
+  }
+  50% {
+    transform: translate(0, 200px);
+  }
+  75% {
+    transform: translate(-100px, 100px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
