@@ -70,8 +70,9 @@ export const HeroSection = () => {
           transition={{ duration: 0.5 }}
           className="hero-badge"
         >
-          <span className="hero-badge-sparkle">✨</span>
+          <img src="/logo.png" alt="Beautcia logo" className="hero-badge-logo" />
           <span className="hero-badge-text">Your Beauty, Simplified</span>
+          <span className="hero-badge-sparkle">✨</span>
         </motion.div>
 
         <motion.div

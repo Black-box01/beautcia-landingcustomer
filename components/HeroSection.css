@@ -44,6 +44,13 @@
   }
 }
 
+.hero-badge-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
 .hero-badge-sparkle {
   font-size: 18px;
 }
