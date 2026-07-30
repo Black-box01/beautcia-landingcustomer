@@ -21,7 +21,7 @@ export const TestimonialsSection = () => {
         <div className="testimonials-header">
           <SectionHeader
             kicker="Testimonials"
-            title="Loved By Thousands Of Happy Customers"
+            title="Loved by happy customers"
             subtitle="See what our customers are saying about their Beautcia experience"
           />
         </div>

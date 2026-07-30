@@ -99,8 +99,7 @@ export const HeroSection = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="hero-subheadline"
         >
-          Discover top-rated hair stylists, makeup artists, nail technicians, and more.
-          Book instantly, pay securely, and look your best — all from one app.
+          You don&apos;t have to guess if your stylist will be free, book them and show up confidently
         </motion.p>
 
         <motion.div
@@ -199,7 +198,7 @@ export const HeroSection = () => {
                 </motion.svg>
               ))}
             </div>
-            <span className="hero-trust-text">Trusted by 5,000+ happy customers</span>
+            <span className="hero-trust-text">Our customers are happy and stressfree!</span>
           </div>
         </motion.div>
       </div>
