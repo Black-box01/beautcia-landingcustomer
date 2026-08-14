@@ -1,11 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { GlassCard, SectionHeader } from '@/components/ui';
+import { fetchTestimonialsClient } from '@/lib/cms';
+import type { Testimonial } from '@/lib/cms';
 import './TestimonialsSection.css';
 
-const TESTIMONIALS = [
+const DEFAULT_TESTIMONIALS: Testimonial[] = [
   { name: 'Adaeze O.', avatar: 'A', rating: 5, quote: 'I found my go-to hairstylist on Beautcia! The booking process was so easy, and I loved that I could see real reviews before booking. My hair turned out exactly as I wanted.' },
   { name: 'Chidinma E.', avatar: 'C', rating: 4, quote: 'As someone who is always running late, the smart reminders are a lifesaver. I never miss my appointments now. The secure payment feature gives me peace of mind. Would love more professionals in my area!' },
   { name: 'Funke A.', avatar: 'F', rating: 5, quote: 'Beautcia has changed how I book beauty services. No more haggling or awkward payments. Everything is transparent and professional. I recommend it to all my friends!' },
@@ -15,6 +17,14 @@ const TESTIMONIALS = [
 ];
 
 export const TestimonialsSection = () => {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(DEFAULT_TESTIMONIALS);
+
+  useEffect(() => {
+    fetchTestimonialsClient().then((data) => {
+      if (data.length > 0) setTestimonials(data);
+    });
+  }, []);
+
   return (
     <section className="testimonials-section">
       <div className="testimonials-container">
@@ -33,7 +43,7 @@ export const TestimonialsSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          {TESTIMONIALS.map((testimonial, index) => (
+          {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}

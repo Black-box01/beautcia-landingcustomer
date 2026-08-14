@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SectionHeader } from '@/components/ui';
+import { fetchFAQsClient } from '@/lib/cms';
+import type { FAQ } from '@/lib/cms';
 import './FAQSection.css';
 
-const FAQS = [
+const DEFAULT_FAQS: FAQ[] = [
   {
     question: 'How do I book a beauty service on Beautcia?',
     answer: 'Simply download the Beautcia app, create an account, browse beauty professionals in your area, choose your service and preferred time, and book instantly. You can filter by service type, location, rating, and price to find your perfect match.',
@@ -82,6 +84,13 @@ const FAQItem = ({ question, answer, isOpen, onClick, number }: FAQItemProps) =>
 
 export const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [faqs, setFaqs] = useState<FAQ[]>(DEFAULT_FAQS);
+
+  useEffect(() => {
+    fetchFAQsClient().then((data) => {
+      if (data.length > 0) setFaqs(data);
+    });
+  }, []);
 
   return (
     <section className="faq-section">
@@ -95,7 +104,7 @@ export const FAQSection = () => {
         </div>
 
         <div className="faq-list">
-          {FAQS.map((faq, index) => (
+          {faqs.map((faq, index) => (
             <FAQItem
               key={index}
               number={index + 1}

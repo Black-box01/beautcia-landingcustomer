@@ -1,17 +1,27 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { SectionHeader, GradientBlob } from '@/components/ui';
+import { fetchSiteContentClient, mapContentItemsToSteps } from '@/lib/cms';
 import './HowItWorksSection.css';
 
-const CUSTOMER_STEPS = [
+const DEFAULT_STEPS = [
   { step: 1, title: 'Download and Sign Up', description: 'Get the Beautcia app from Google Play or App Store. Create your account in seconds with your email or social login. It is free and takes less than a minute.' },
   { step: 2, title: 'Discover and Book', description: 'Browse beauty professionals near you. Filter by service, rating, price, and availability. See real reviews and photos. Pick your perfect match and book instantly.' },
   { step: 3, title: 'Pay Securely and Enjoy', description: 'Pay safely through the app. Your money is protected until your service is done. Show up, look amazing, and rate your experience. It is that simple.' },
 ];
 
 export const HowItWorksSection = () => {
+  const [steps, setSteps] = useState(DEFAULT_STEPS);
+
+  useEffect(() => {
+    fetchSiteContentClient().then((content) => {
+      const mapped = mapContentItemsToSteps(content.contentItems['how_it_works']);
+      if (mapped.length > 0) setSteps(mapped);
+    });
+  }, []);
+
   return (
     <section className="how-section">
       <div className="how-bg" />
@@ -45,7 +55,7 @@ export const HowItWorksSection = () => {
               </div>
 
               <div className="how-steps">
-                {CUSTOMER_STEPS.map((item, index) => (
+                {steps.map((item, index) => (
                   <motion.div
                     key={item.step}
                     className="how-step"
