@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+import TrackingProvider from "@/components/TrackingProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -63,7 +64,7 @@ export default function RootLayout({
         </noscript>
       </head>
       <body style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-        {children}
+        <TrackingProvider>{children}</TrackingProvider>
         
         {/* Meta Pixel */}
         <Script id="meta-pixel" strategy="lazyOnload">
@@ -76,7 +77,7 @@ export default function RootLayout({
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '1234567890');
+            fbq('init', '2145501376280698');
             fbq('track', 'PageView');
           `}
         </Script>
@@ -86,7 +87,7 @@ export default function RootLayout({
           {`
             !function (w, d, t) {
               w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableEvent","enablePageView","enableSuppression"],ttq.push(["page"]);
-              var s=d.createElement("script");s.type="text/javascript";s.async=!0;s.src="https://analytics.tiktok.com/i18n/pixel/events.js?sdkid=XXXXXXX&content_id=XXXXXXX";
+              var s=d.createElement("script");s.type="text/javascript";s.async=!0;s.src="https://analytics.tiktok.com/i18n/pixel/events.js?sdkid=D7P0013C77U3CRQJQV6G&content_id=D7P0013C77U3CRQJQV6G";
               var f=d.getElementsByTagName("script")[0];f.parentNode.insertBefore(s,f);
             }(window, document, 'ttq');
           `}
@@ -99,7 +100,7 @@ export default function RootLayout({
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
               t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
               y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "XXXXXXX");
+            })(window, document, "clarity", "script", "wd0rfeykma");
           `}
         </Script>
 

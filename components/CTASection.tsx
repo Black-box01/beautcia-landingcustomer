@@ -53,6 +53,7 @@ export const CTASection = () => {
               href={GOOGLE_PLAY_URL}
               target="_blank"
               rel="noopener noreferrer"
+              data-track="download_google"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="cta-store-btn cta-store-btn-google"
@@ -73,6 +74,7 @@ export const CTASection = () => {
               href={APP_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
+              data-track="download_apple"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="cta-store-btn cta-store-btn-apple"
