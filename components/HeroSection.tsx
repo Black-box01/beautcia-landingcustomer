@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { GradientBlob } from '@/components/ui';
 import { gradients } from '@/lib/constants';
+import { fetchSiteContentClient, getSettingValue } from '@/lib/cms';
 import './HeroSection.css';
 
 const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.yeka1.beautcia';
@@ -24,8 +25,16 @@ const FLOATING_ELEMENTS = [
   { emoji: '💄', x: '5%', y: '50%', delay: 0.5, duration: 7.5 },
 ];
 
+// Default values matching actual customer landing content
+const DEFAULTS = {
+  eyebrow: 'Your Beauty, Simplified',
+  headline: 'Book Beauty Professionals In Seconds',
+  lead: 'You don\u2019t have to guess if your stylist will be free, book them and show up confidently',
+};
+
 export const HeroSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [content, setContent] = useState(DEFAULTS);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -36,6 +45,22 @@ export const HeroSection = () => {
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Fetch hero content from CMS
+  useEffect(() => {
+    fetchSiteContentClient().then((c) => {
+      const eyebrow = getSettingValue(c.settings, 'hero', 'eyebrow');
+      const headline = getSettingValue(c.settings, 'hero', 'headline');
+      const lead = getSettingValue(c.settings, 'hero', 'lead');
+      if (eyebrow || headline || lead) {
+        setContent({
+          eyebrow: eyebrow || DEFAULTS.eyebrow,
+          headline: headline || DEFAULTS.headline,
+          lead: lead || DEFAULTS.lead,
+        });
+      }
+    });
   }, []);
 
   return (
@@ -71,7 +96,7 @@ export const HeroSection = () => {
           className="hero-badge"
         >
           <img src="/logo.png" alt="Beautcia logo" className="hero-badge-logo" />
-          <span className="hero-badge-text">Your Beauty, Simplified</span>
+          <span className="hero-badge-text">{content.eyebrow}</span>
           <span className="hero-badge-sparkle">✨</span>
         </motion.div>
 
@@ -85,11 +110,11 @@ export const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="hero-headline"
           >
-            Book Beauty
+            {content.headline.split(' ').slice(0, 2).join(' ')}
             <br />
-            <span className="hero-headline-gradient">Professionals</span>
+            <span className="hero-headline-gradient">{content.headline.split(' ').slice(2, -2).join(' ')}</span>
             <br />
-            In Seconds
+            {content.headline.split(' ').slice(-2).join(' ')}
           </motion.h1>
         </motion.div>
 
@@ -99,7 +124,7 @@ export const HeroSection = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="hero-subheadline"
         >
-          You don&apos;t have to guess if your stylist will be free, book them and show up confidently
+          {content.lead}
         </motion.p>
 
         <motion.div

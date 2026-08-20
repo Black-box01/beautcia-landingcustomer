@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SectionHeader } from '@/components/ui';
-import { fetchFAQsClient } from '@/lib/cms';
+import { fetchFAQsClient, fetchSiteContentClient, getSettingValue } from '@/lib/cms';
 import type { FAQ } from '@/lib/cms';
 import './FAQSection.css';
 
@@ -85,10 +85,27 @@ const FAQItem = ({ question, answer, isOpen, onClick, number }: FAQItemProps) =>
 export const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [faqs, setFaqs] = useState<FAQ[]>(DEFAULT_FAQS);
+  const [header, setHeader] = useState({
+    kicker: 'FAQ',
+    title: 'Common Questions From Customers',
+    subtitle: 'Everything you need to know about booking with Beautcia',
+  });
 
   useEffect(() => {
     fetchFAQsClient().then((data) => {
       if (data.length > 0) setFaqs(data);
+    });
+    fetchSiteContentClient().then((content) => {
+      const kicker = getSettingValue(content.settings, 'faq', 'kicker');
+      const title = getSettingValue(content.settings, 'faq', 'title');
+      const subtitle = getSettingValue(content.settings, 'faq', 'subtitle');
+      if (kicker || title || subtitle) {
+        setHeader((prev) => ({
+          kicker: kicker || prev.kicker,
+          title: title || prev.title,
+          subtitle: subtitle || prev.subtitle,
+        }));
+      }
     });
   }, []);
 
@@ -97,16 +114,16 @@ export const FAQSection = () => {
       <div className="faq-container">
         <div className="faq-header">
           <SectionHeader
-            kicker="FAQ"
-            title="Common Questions From Customers"
-            subtitle="Everything you need to know about booking with Beautcia"
+            kicker={header.kicker}
+            title={header.title}
+            subtitle={header.subtitle}
           />
         </div>
 
         <div className="faq-list">
           {faqs.map((faq, index) => (
             <FAQItem
-              key={index}
+              key={faq.id || index}
               number={index + 1}
               question={faq.question}
               answer={faq.answer}

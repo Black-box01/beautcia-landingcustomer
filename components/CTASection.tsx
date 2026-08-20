@@ -1,8 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { SectionHeader, GradientBlob } from '@/components/ui';
+import { fetchSiteContentClient, getSettingValue } from '@/lib/cms';
+import { captureLead } from '@/lib/tracking';
 import './CTASection.css';
 
 // Store download links
@@ -10,6 +12,38 @@ const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.yeka1
 const APP_STORE_URL = 'https://apps.apple.com/us/app/beautcia/id6754828178';
 
 export const CTASection = () => {
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [header, setHeader] = useState({
+    kicker: 'Ready To Look Your Best?',
+    title: 'Download Beautcia Today And Book Your Next Beauty Appointment',
+    subtitle: 'Join thousands of happy customers who trust Beautcia for their beauty needs. It is free, fast, and easy.',
+  });
+
+  useEffect(() => {
+    fetchSiteContentClient().then((content) => {
+      const kicker = getSettingValue(content.settings, 'cta', 'kicker');
+      const title = getSettingValue(content.settings, 'cta', 'title');
+      const subtitle = getSettingValue(content.settings, 'cta', 'subtitle');
+      if (kicker || title || subtitle) {
+        setHeader((prev) => ({
+          kicker: kicker || prev.kicker,
+          title: title || prev.title,
+          subtitle: subtitle || prev.subtitle,
+        }));
+      }
+    });
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    captureLead(email);
+    setSubmitted(true);
+    setEmail('');
+    setTimeout(() => setSubmitted(false), 4000);
+  };
+
   return (
     <section className="cta-section">
       {/* Decorative Blobs */}
@@ -35,9 +69,9 @@ export const CTASection = () => {
           className="cta-content"
         >
           <SectionHeader
-            kicker="Ready To Look Your Best?"
-            title="Download Beautcia Today And Book Your Next Beauty Appointment"
-            subtitle="Join thousands of happy customers who trust Beautcia for their beauty needs. It is free, fast, and easy."
+            kicker={header.kicker}
+            title={header.title}
+            subtitle={header.subtitle}
           />
 
           {/* CTA Buttons */}
@@ -89,6 +123,58 @@ export const CTASection = () => {
                 <div className="cta-store-name">App Store</div>
               </div>
             </motion.a>
+          </motion.div>
+
+          {/* Email Capture Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            style={{ width: '100%', maxWidth: '500px', margin: '0 auto 24px' }}
+          >
+            {submitted ? (
+              <p style={{ color: '#fff', fontSize: '1rem', fontWeight: 600, textAlign: 'center', padding: '12px 0' }}>
+                Thank you! We'll be in touch soon.
+              </p>
+            ) : (
+              <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  style={{
+                    flex: 1,
+                    padding: '14px 18px',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    background: 'rgba(255,255,255,0.1)',
+                    color: '#fff',
+                    fontSize: '0.95rem',
+                    outline: 'none',
+                  }}
+                />
+                <button
+                  type="submit"
+                  style={{
+                    padding: '14px 28px',
+                    borderRadius: '12px',
+                    border: 'none',
+                    background: '#B28B53',
+                    color: '#fff',
+                    fontSize: '0.95rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.3s',
+                  }}
+                >
+                  Get Notified
+                </button>
+              </form>
+            )}
           </motion.div>
 
           {/* Trust Badge */}

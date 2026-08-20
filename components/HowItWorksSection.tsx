@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { SectionHeader, GradientBlob } from '@/components/ui';
-import { fetchSiteContentClient, mapContentItemsToSteps } from '@/lib/cms';
+import { fetchSiteContentClient, mapContentItemsToSteps, getSettingValue } from '@/lib/cms';
 import './HowItWorksSection.css';
 
 const DEFAULT_STEPS = [
@@ -14,9 +14,24 @@ const DEFAULT_STEPS = [
 
 export const HowItWorksSection = () => {
   const [steps, setSteps] = useState(DEFAULT_STEPS);
+  const [header, setHeader] = useState({
+    kicker: 'How It Works',
+    title: 'Book Your Beauty Service In 3 Easy Steps',
+    subtitle: 'From download to appointment in minutes \u2014 it is that simple',
+  });
 
   useEffect(() => {
     fetchSiteContentClient().then((content) => {
+      const kicker = getSettingValue(content.settings, 'how_it_works', 'kicker');
+      const title = getSettingValue(content.settings, 'how_it_works', 'title');
+      const subtitle = getSettingValue(content.settings, 'how_it_works', 'subtitle');
+      if (kicker || title || subtitle) {
+        setHeader((prev) => ({
+          kicker: kicker || prev.kicker,
+          title: title || prev.title,
+          subtitle: subtitle || prev.subtitle,
+        }));
+      }
       const mapped = mapContentItemsToSteps(content.contentItems['how_it_works']);
       if (mapped.length > 0) setSteps(mapped);
     });
@@ -31,9 +46,9 @@ export const HowItWorksSection = () => {
       <div className="how-container">
         <div className="how-header">
           <SectionHeader
-            kicker="How It Works"
-            title="Book Your Beauty Service In 3 Easy Steps"
-            subtitle="From download to appointment in minutes — it is that simple"
+            kicker={header.kicker}
+            title={header.title}
+            subtitle={header.subtitle}
           />
         </div>
 

@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { GlassCard, SectionHeader } from '@/components/ui';
+import { fetchSiteContentClient, getSettingValue, mapContentItems } from '@/lib/cms';
 import './FeaturesSection.css';
 
 const CUSTOMER_FEATURES = [
@@ -54,14 +55,44 @@ const CUSTOMER_FEATURES = [
 ];
 
 export const FeaturesSection = () => {
+  const [features, setFeatures] = useState(CUSTOMER_FEATURES);
+  const [header, setHeader] = useState({
+    kicker: 'Why Choose Beautcia',
+    title: 'Everything You Need For Your Beauty Appointments',
+    subtitle: "From discovery to booking to payment \u2014 we've got you covered",
+  });
+
+  useEffect(() => {
+    fetchSiteContentClient().then((content) => {
+      // Features header settings
+      const title = getSettingValue(content.settings, 'features', 'title');
+      const description = getSettingValue(content.settings, 'features', 'description');
+      if (title || description) {
+        setHeader((prev) => ({
+          ...prev,
+          title: title || prev.title,
+          subtitle: description || prev.subtitle,
+        }));
+      }
+      // Features content items
+      const mapped = mapContentItems(content.contentItems['features']);
+      if (mapped.length > 0) {
+        setFeatures(mapped.map((f, i) => ({
+          ...f,
+          icon: CUSTOMER_FEATURES[i]?.icon ?? CUSTOMER_FEATURES[0].icon,
+        })));
+      }
+    });
+  }, []);
+
   return (
     <section className="features-section">
       <div className="features-container">
         <div className="features-header">
           <SectionHeader
-            kicker="Why Choose Beautcia"
-            title="Everything You Need For Your Beauty Appointments"
-            subtitle="From discovery to booking to payment — we've got you covered"
+            kicker={header.kicker}
+            title={header.title}
+            subtitle={header.subtitle}
           />
         </div>
 

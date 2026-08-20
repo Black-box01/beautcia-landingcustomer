@@ -1,8 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { fetchSiteContentClient, getSettingValue } from '@/lib/cms';
 import './Footer.css';
+
+const DEFAULT_FOOTER = {
+  aboutText: 'Your trusted platform for booking beauty services. Connect with verified professionals, book instantly, and look your best.',
+  copyrightText: 'Beautcia',
+  devCreditName: 'Black-Box Tech',
+  devCreditUrl: 'https://blackboxtech.online',
+  devCreditEmail: 'info@blackboxtech.online',
+  devCreditPhone1: '+2348050205349',
+  devCreditPhone2: '+2349024787192',
+};
 
 // Social media links
 const SOCIAL_LINKS = [
@@ -62,7 +73,55 @@ const CONTACT_INFO = {
 export const Footer = () => {
   const [showAbout, setShowAbout] = useState(false);
   const [showDownloadDropdown, setShowDownloadDropdown] = useState(false);
+  const [footer, setFooter] = useState(DEFAULT_FOOTER);
+  const [socialLinks, setSocialLinks] = useState(SOCIAL_LINKS);
   const currentYear = new Date().getFullYear();
+
+  useEffect(() => {
+    fetchSiteContentClient().then((content) => {
+      // Footer settings
+      const aboutText = getSettingValue(content.settings, 'footer', 'aboutText');
+      const copyrightText = getSettingValue(content.settings, 'footer', 'copyrightText');
+      const devCreditName = getSettingValue(content.settings, 'footer', 'devCreditName');
+      const devCreditUrl = getSettingValue(content.settings, 'footer', 'devCreditUrl');
+      const devCreditEmail = getSettingValue(content.settings, 'footer', 'devCreditEmail');
+      const devCreditPhone1 = getSettingValue(content.settings, 'footer', 'devCreditPhone1');
+      const devCreditPhone2 = getSettingValue(content.settings, 'footer', 'devCreditPhone2');
+      setFooter({
+        aboutText: aboutText || DEFAULT_FOOTER.aboutText,
+        copyrightText: copyrightText || DEFAULT_FOOTER.copyrightText,
+        devCreditName: devCreditName || DEFAULT_FOOTER.devCreditName,
+        devCreditUrl: devCreditUrl || DEFAULT_FOOTER.devCreditUrl,
+        devCreditEmail: devCreditEmail || DEFAULT_FOOTER.devCreditEmail,
+        devCreditPhone1: devCreditPhone1 || DEFAULT_FOOTER.devCreditPhone1,
+        devCreditPhone2: devCreditPhone2 || DEFAULT_FOOTER.devCreditPhone2,
+      });
+      // Social links from CMS
+      const socialSettings = content.settings['social'] || [];
+      if (socialSettings.length > 0) {
+        const socialMap: Record<string, string> = {};
+        for (const s of socialSettings) {
+          socialMap[s.key] = s.value || '';
+        }
+        const platforms = [
+          { key: 'facebookUrl', name: 'Facebook' },
+          { key: 'instagramUrl', name: 'Instagram' },
+          { key: 'xUrl', name: 'X' },
+          { key: 'tiktokUrl', name: 'TikTok' },
+        ];
+        const updated: typeof SOCIAL_LINKS = [];
+        for (const p of platforms) {
+          const url = socialMap[p.key];
+          const defaultLink = SOCIAL_LINKS.find((s) => s.name === p.name);
+          const href = url || defaultLink?.url || '';
+          if (href) {
+            updated.push({ name: p.name, url: href, icon: defaultLink?.icon || SOCIAL_LINKS[0].icon });
+          }
+        }
+        if (updated.length > 0) setSocialLinks(updated);
+      }
+    });
+  }, []);
 
   return (
     <>
@@ -76,10 +135,10 @@ export const Footer = () => {
                 <h3 className="footer-brand-name">Beautcia</h3>
               </div>
               <p className="footer-description">
-                Your trusted platform for booking beauty services. Connect with verified professionals, book instantly, and look your best.
+                {footer.aboutText}
               </p>
               <div className="footer-social">
-                {SOCIAL_LINKS.map((social) => (
+                {socialLinks.map((social) => (
                   <motion.a
                     key={social.name}
                     href={social.url}
@@ -169,7 +228,7 @@ export const Footer = () => {
           {/* Bottom Bar */}
           <div className="footer-bottom">
             <p className="footer-copyright">
-              © {currentYear} Beautcia. All rights reserved.
+              © {currentYear} {footer.copyrightText}. All rights reserved.
             </p>
             <div className="footer-bottom-links">
               <a href="/privacy-policy" className="footer-bottom-link">
@@ -179,6 +238,36 @@ export const Footer = () => {
                 Terms of Service
               </a>
             </div>
+          </div>
+
+          {/* Developer Credit */}
+          <div style={{ textAlign: 'center', padding: '16px 0 8px' }}>
+            <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.9)', fontWeight: 500, margin: 0 }}>
+              Designed and Developed by{' '}
+              <a href={footer.devCreditUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'underline', fontWeight: 600 }}>
+                {footer.devCreditName}
+              </a>
+              {' | '}
+              <a href={footer.devCreditUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'underline', fontWeight: 600 }}>
+                {footer.devCreditUrl.replace('https://', '')}
+              </a>
+              {' | '}
+              <a href={`mailto:${footer.devCreditEmail}?subject=${encodeURIComponent('Inquiry from Beautcia')}&body=${encodeURIComponent(`Hello ${footer.devCreditName},
+
+We are reaching out regarding a project. We would love to discuss how you can help us.
+
+Thank you.`)}`} style={{ color: '#fff', textDecoration: 'underline', fontWeight: 600 }}>
+                {footer.devCreditEmail}
+              </a>
+              {' | '}
+              <a href={`tel:${footer.devCreditPhone1}`} style={{ color: '#fff', textDecoration: 'underline', fontWeight: 600 }}>
+                {footer.devCreditPhone1}
+              </a>
+              {', '}
+              <a href={`tel:${footer.devCreditPhone2}`} style={{ color: '#fff', textDecoration: 'underline', fontWeight: 600 }}>
+                {footer.devCreditPhone2}
+              </a>
+            </p>
           </div>
         </div>
       </footer>
