@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { SectionHeader, GradientBlob } from '@/components/ui';
+import { SectionHeader } from '@/components/ui';
 import { fetchSiteContentClient, getSettingValue } from '@/lib/cms';
 import { captureLead } from '@/lib/tracking';
 import './CTASection.css';
@@ -46,20 +46,6 @@ export const CTASection = () => {
 
   return (
     <section className="cta-section">
-      {/* Decorative Blobs */}
-      <GradientBlob
-        size="large"
-        color="gold"
-        position={{ top: '20%', left: '10%' }}
-        opacity={0.5}
-      />
-      <GradientBlob
-        size="medium"
-        color="lightGold"
-        position={{ bottom: '20%', right: '15%' }}
-        opacity={0.4}
-      />
-
       <div className="cta-container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -134,7 +120,7 @@ export const CTASection = () => {
             style={{ width: '100%', maxWidth: '500px', margin: '0 auto 24px' }}
           >
             {submitted ? (
-              <p style={{ color: '#fff', fontSize: '1rem', fontWeight: 600, textAlign: 'center', padding: '12px 0' }}>
+              <p style={{ color: '#000', fontSize: '1rem', fontWeight: 600, textAlign: 'center', padding: '12px 0' }}>
                 Thank you! We'll be in touch soon.
               </p>
             ) : (
@@ -149,9 +135,9 @@ export const CTASection = () => {
                     flex: 1,
                     padding: '14px 18px',
                     borderRadius: '12px',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    background: 'rgba(255,255,255,0.1)',
-                    color: '#fff',
+                    border: '1px solid #D1D5DB',
+                    background: '#F9FAFB',
+                    color: '#000',
                     fontSize: '0.95rem',
                     outline: 'none',
                   }}

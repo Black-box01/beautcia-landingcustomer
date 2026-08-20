@@ -3,7 +3,7 @@
   position: relative;
   overflow: hidden;
   padding: 100px 24px;
-  background: linear-gradient(135deg, rgba(178,139,83,0.25), rgba(212,165,116,0.20), rgba(255,255,255,0.00));
+  background: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
