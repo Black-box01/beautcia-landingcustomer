@@ -103,7 +103,7 @@ export const FeaturesSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          {CUSTOMER_FEATURES.map((feature, index) => (
+          {features.map((feature: any, index: number) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}

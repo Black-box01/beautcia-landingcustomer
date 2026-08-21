@@ -30,6 +30,7 @@ const DEFAULTS = {
   eyebrow: 'Your Beauty, Simplified',
   headline: 'Book Beauty Professionals In Seconds',
   lead: 'You don\u2019t have to guess if your stylist will be free, book them and show up confidently',
+  trustText: 'Our customers are happy and stressfree!',
 };
 
 export const HeroSection = () => {
@@ -53,11 +54,13 @@ export const HeroSection = () => {
       const eyebrow = getSettingValue(c.settings, 'hero', 'eyebrow');
       const headline = getSettingValue(c.settings, 'hero', 'headline');
       const lead = getSettingValue(c.settings, 'hero', 'lead');
-      if (eyebrow || headline || lead) {
+      const trustText = getSettingValue(c.settings, 'hero', 'trust_text');
+      if (eyebrow || headline || lead || trustText) {
         setContent({
           eyebrow: eyebrow || DEFAULTS.eyebrow,
           headline: headline || DEFAULTS.headline,
           lead: lead || DEFAULTS.lead,
+          trustText: trustText || DEFAULTS.trustText,
         });
       }
     });
@@ -223,7 +226,7 @@ export const HeroSection = () => {
                 </motion.svg>
               ))}
             </div>
-            <span className="hero-trust-text">Our customers are happy and stressfree!</span>
+            <span className="hero-trust-text">{content.trustText}</span>
           </div>
         </motion.div>
       </div>

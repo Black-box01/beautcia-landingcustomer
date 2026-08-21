@@ -117,7 +117,7 @@ export const CTASection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            style={{ width: '100%', maxWidth: '500px', margin: '0 auto 24px' }}
+            style={{ width: '100%', maxWidth: '500px', margin: '32px auto 24px' }}
           >
             {submitted ? (
               <p style={{ color: '#000', fontSize: '1rem', fontWeight: 600, textAlign: 'center', padding: '12px 0' }}>
