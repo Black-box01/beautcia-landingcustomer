@@ -18,25 +18,52 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.beautcia.com"),
   title: "Beautcia - Book Beauty Services Instantly | Hair, Makeup, Nails & More",
   description: "Discover and book top-rated beauty professionals near you. Hair stylists, makeup artists, nail techs, and more. Book instantly, pay securely, look your best. Download the Beautcia app today.",
-  keywords: "beauty services, book beauty, hair stylist, makeup artist, nail technician, beauty app, booking app, beauty professionals, Lagos, Nigeria",
+  keywords: [
+    "beauty services",
+    "book beauty",
+    "hair stylist",
+    "makeup artist",
+    "nail technician",
+    "beauty app",
+    "booking app",
+    "beauty professionals",
+    "Lagos",
+    "Nigeria",
+  ],
   authors: [{ name: "Beautcia" }],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Beautcia - Book Beauty Services Instantly",
     description: "Discover and book top-rated beauty professionals near you. Book instantly, pay securely, look your best.",
     url: "https://www.beautcia.com",
     siteName: "Beautcia",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Beautcia - Book Beauty Services Instantly",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Beautcia - Book Beauty Services Instantly",
     description: "Discover and book top-rated beauty professionals near you.",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
     follow: true,
+  },
+  icons: {
+    icon: "/favicon.ico",
   },
 };
 
@@ -103,17 +130,6 @@ export default function RootLayout({
               t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
               y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
             })(window, document, "clarity", "script", "wd0rfeykma");
-          `}
-        </Script>
-
-        {/* Google Analytics */}
-        <Script id="ga" strategy="lazyOnload" src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX" />
-        <Script id="ga-config" strategy="lazyOnload">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-XXXXXXX');
           `}
         </Script>
       </body>

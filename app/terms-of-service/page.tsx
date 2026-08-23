@@ -1,11 +1,24 @@
 import React from 'react';
+import { JsonLd } from '@/lib/seo/JsonLd';
+import { breadcrumbSchema } from '@/lib/seo/schemas';
 import '../legal-pages.css';
+
+export const metadata = {
+  title: 'Terms of Service - Beautcia',
+  description: 'Beautcia Terms of Service - Terms and conditions for using the Beautcia platform.',
+};
 
 export default function TermsOfServicePage() {
   const currentYear = new Date().getFullYear();
 
   return (
     <div className="legal-page">
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Terms of Service', url: '/terms-of-service' },
+        ])}
+      />
       <div className="legal-container">
         <div className="legal-header">
           <a href="/" className="legal-back-link">

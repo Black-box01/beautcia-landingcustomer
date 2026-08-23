@@ -1,11 +1,24 @@
 import React from 'react';
+import { JsonLd } from '@/lib/seo/JsonLd';
+import { breadcrumbSchema } from '@/lib/seo/schemas';
 import '../legal-pages.css';
+
+export const metadata = {
+  title: 'Privacy Policy - Beautcia',
+  description: 'Beautcia Privacy Policy - How we collect, manage and protect your personal data.',
+};
 
 export default function PrivacyPolicyPage() {
   const currentYear = new Date().getFullYear();
 
   return (
     <div className="legal-page">
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Privacy Policy', url: '/privacy-policy' },
+        ])}
+      />
       <div className="legal-container">
         <div className="legal-header">
           <a href="/" className="legal-back-link">
