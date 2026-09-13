@@ -1,4 +1,4 @@
-import { apiGetClient } from "./api";
+import { apiGet, apiGetClient } from "./api";
 import { SITE_ID } from "./api";
 
 // ---------------------------------------------------------------------------
@@ -29,6 +29,85 @@ export interface ContentItem {
 export interface SiteContentGrouped {
   settings: Record<string, any[]>;
   contentItems: Record<string, ContentItem[]>;
+}
+
+// ---------------------------------------------------------------------------
+// Blog Posts
+// ---------------------------------------------------------------------------
+export interface BlogPost {
+  id: string;
+  slug: string;
+  image: string;
+  date: string;
+  title: string;
+  summary: string;
+  author: string;
+  content: string[];
+}
+
+export interface ApiBlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string;
+  content: string;
+  image: string | null;
+  author: string;
+  status: string;
+  publishedAt: string | null;
+  createdAt: string;
+}
+
+function mapBlogPost(post: ApiBlogPost): BlogPost {
+  const date = post.publishedAt
+    ? new Date(post.publishedAt).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : new Date(post.createdAt).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+  // Content may be stored as a JSON-stringified array or plain text
+  let paragraphs: string[];
+  try {
+    const parsed = JSON.parse(post.content);
+    paragraphs = Array.isArray(parsed) ? parsed : [post.content];
+  } catch {
+    paragraphs = (post.content || "").split("\n\n").filter(Boolean);
+  }
+
+  return {
+    id: post.id,
+    slug: post.slug,
+    image: post.image || "/logo.png",
+    date,
+    title: post.title,
+    summary: post.summary,
+    author: post.author || "Beautcia",
+    content: paragraphs,
+  };
+}
+
+/** Fetch published blog posts for this site (server component – uses ISR cache). */
+export async function fetchBlogPosts(limit?: number): Promise<BlogPost[]> {
+  const posts = await apiGet<ApiBlogPost[]>("/blog", {
+    siteId: SITE_ID,
+    status: "published",
+  });
+  if (!posts || posts.length === 0) return [];
+  const mapped = posts.map(mapBlogPost);
+  return limit ? mapped.slice(0, limit) : mapped;
+}
+
+/** Fetch a single blog post by slug (server component). */
+export async function fetchBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+  const post = await apiGet<ApiBlogPost>(`/blog/by-slug/${slug}`);
+  if (!post) return null;
+  return mapBlogPost(post);
 }
 
 // ---------------------------------------------------------------------------

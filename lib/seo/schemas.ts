@@ -167,3 +167,38 @@ export function softwareAppSchema() {
     },
   };
 }
+
+export function articleSchema(post: {
+  title: string;
+  summary: string;
+  image: string;
+  author: string;
+  date: string;
+  slug: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.summary,
+    image: post.image.startsWith("http") ? post.image : `${SEO.baseUrl}${post.image}`,
+    author: {
+      "@type": "Person",
+      name: post.author,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SEO.siteName,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SEO.baseUrl}${SEO.logo}`,
+      },
+    },
+    datePublished: post.date,
+    url: `${SEO.baseUrl}/blog/${post.slug}`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SEO.baseUrl}/blog/${post.slug}`,
+    },
+  };
+}
