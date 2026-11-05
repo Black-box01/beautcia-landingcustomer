@@ -9,6 +9,31 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3006';
 const SITE_ID = process.env.NEXT_PUBLIC_SITE_ID || 'main_website';
 
+/** Meta Pixel id (same business pixel across all Beautcia sites). */
+export const META_PIXEL_ID =
+  process.env.NEXT_PUBLIC_META_PIXEL_ID || '2145501376280698';
+
+/**
+ * Fire a Meta Pixel standard/custom event. No-ops when the pixel hasn't loaded
+ * (ad blocker, SSR) or when `fbq` is unavailable, so it can never break a page.
+ * Mirrors the app-side App Events so web + app conversions land in one dataset.
+ */
+export function trackMeta(
+  event: string,
+  params?: Record<string, unknown>,
+  eventId?: string,
+): void {
+  if (typeof window === 'undefined') return;
+  const fbq = (window as unknown as { fbq?: (...args: unknown[]) => void }).fbq;
+  if (typeof fbq !== 'function') return;
+  try {
+    if (eventId) fbq('track', event, params ?? {}, { eventID: eventId });
+    else fbq('track', event, params ?? {});
+  } catch {
+    /* never break the page for analytics */
+  }
+}
+
 let sessionId: string;
 let visitorId: string | null = null;
 let initialized = false;
@@ -154,6 +179,13 @@ function handleClick(e: MouseEvent): void {
   const href = trackEl.getAttribute('href') || '';
   const selector = buildSelector(trackEl);
 
+  // Meta: classify the click into the right standard/custom event.
+  if (href.startsWith('mailto:') || href.startsWith('tel:')) {
+    trackMeta('Contact', { contact_method: href.startsWith('tel:') ? 'phone' : 'email' });
+  } else if (href.includes('play.google.com') || href.includes('apps.apple.com')) {
+    trackMeta('AppStoreClick', { destination: href.includes('apple') ? 'ios' : 'android' });
+  }
+
   apiPost('event', {
     siteId: SITE_ID,
     sessionId: getSessionId(),
@@ -192,6 +224,8 @@ function buildSelector(el: Element): string {
 /** Track a route change (for Next.js App Router / SPA navigation) */
 export function trackPageView(path?: string, title?: string): void {
   if (!initialized) return;
+  // Meta: SPA route change
+  trackMeta('PageView');
   apiPost('event', {
     siteId: SITE_ID,
     sessionId: getSessionId(),
@@ -209,6 +243,8 @@ export function trackPageView(path?: string, title?: string): void {
 
 /** Capture a lead's email/contact for marketing follow-up */
 export function captureLead(email: string, contact?: string): void {
+  // Meta: Lead (standard conversion for email capture)
+  trackMeta('Lead', { content_name: SITE_ID, content_category: 'email_signup' });
   apiPost('lead', {
     siteId: SITE_ID,
     sessionId: getSessionId(),
