@@ -84,6 +84,9 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//www.clarity.ms" />
         <link rel="dns-prefetch" href="//www.google-analytics.com" />
         
+        {/* Google Search Console verification */}
+        <meta name="google-site-verification" content="SzVu89HQSBH9TKRzvZjLKdeMkSZYw5TOirPoELar0GA" />
+
         {/* Preconnect for Google Fonts */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
