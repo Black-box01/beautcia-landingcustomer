@@ -43,6 +43,8 @@ export interface BlogPost {
   summary: string;
   author: string;
   content: string[];
+  blocks?: any[];
+  seoMeta?: any;
 }
 
 export interface ApiBlogPost {
@@ -51,6 +53,8 @@ export interface ApiBlogPost {
   title: string;
   summary: string;
   content: string;
+  blocks?: any[];
+  seoMeta?: any;
   image: string | null;
   author: string;
   status: string;
@@ -71,11 +75,19 @@ function mapBlogPost(post: ApiBlogPost): BlogPost {
         day: "numeric",
       });
 
-  // Content may be stored as a JSON-stringified array or plain text
   let paragraphs: string[];
+  let blocks: any[] = [];
   try {
     const parsed = JSON.parse(post.content);
-    paragraphs = Array.isArray(parsed) ? parsed : [post.content];
+    if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === 'object' && parsed[0].type) {
+      blocks = parsed;
+      paragraphs = parsed
+        .filter((b: any) => b.type === 'heading' || b.type === 'paragraph')
+        .map((b: any) => b.content?.text || '')
+        .filter(Boolean);
+    } else {
+      paragraphs = Array.isArray(parsed) ? parsed : [post.content];
+    }
   } catch {
     paragraphs = (post.content || "").split("\n\n").filter(Boolean);
   }
@@ -89,6 +101,8 @@ function mapBlogPost(post: ApiBlogPost): BlogPost {
     summary: post.summary,
     author: post.author || "Beautcia",
     content: paragraphs,
+    blocks: blocks.length > 0 ? blocks : undefined,
+    seoMeta: post.seoMeta || undefined,
   };
 }
 
