@@ -5,6 +5,10 @@ import { Footer } from "@/components";
 import { fetchBlogPostBySlug, fetchBlogPosts } from "@/lib/cms";
 import { JsonLd } from "@/lib/seo/JsonLd";
 import { articleSchema, breadcrumbSchema } from "@/lib/seo/schemas";
+import { BlogBlockRenderer } from "@/components/blog/block-renderer";
+import { SocialShare } from "@/components/blog/social-share";
+import { trackMeta } from "@/lib/tracking";
+import { useEffect } from "react";
 
 export const revalidate = 60;
 
@@ -15,7 +19,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await fetchBlogPostBySlug(slug);
-  if (!post) return { title: "Blog Not Found - Beautcia" };
+  if (!post) return { title: "Blog Not Found - Beautcia Blog" };
 
   const metaTitle = post.seoMeta?.metaTitle || `${post.title} - Beautcia Blog`;
   const metaDesc = post.seoMeta?.metaDescription || post.summary;
@@ -44,98 +48,6 @@ export async function generateMetadata({
   };
 }
 
-function RenderBlock({ block }: { block: any }) {
-  switch (block.type) {
-    case 'heading': {
-      const Tag = `h${block.content.level || 2}` as any;
-      return (
-        <Tag key={block.id} id={`h-${block.id}`} className={`font-bold text-gray-900 mt-8 mb-4 ${block.meta?.alignment === 'center' ? 'text-center' : block.meta?.alignment === 'right' ? 'text-right' : 'text-left'}`} style={{ fontSize: block.meta?.fontSize === 'xl' ? '1.875rem' : block.meta?.fontSize === '2xl' ? '2.25rem' : block.meta?.fontSize === 'sm' ? '0.875rem' : '1.5rem', color: block.meta?.color }}>
-          {block.content.text}
-        </Tag>
-      );
-    }
-    case 'paragraph':
-      return (
-        <p key={block.id} className={`mb-6 text-gray-700 leading-relaxed ${block.meta?.alignment === 'center' ? 'text-center' : block.meta?.alignment === 'right' ? 'text-right' : 'text-left'}`} style={{ fontSize: block.meta?.fontSize === 'lg' ? '1.125rem' : block.meta?.fontSize === 'sm' ? '0.875rem' : '1rem', color: block.meta?.color }}>
-          {block.content.text}
-        </p>
-      );
-    case 'image':
-      return (
-        <figure key={block.id} className={`my-8 ${block.content.alignment === 'center' ? 'text-center' : ''}`} style={{ maxWidth: block.content.width === '50%' ? '50%' : block.content.width === '25%' ? '25%' : block.content.width === '75%' ? '75%' : '100%' }}>
-          <img src={block.content.src} alt={block.content.altText || ''} className="rounded-lg shadow-lg" loading="lazy" />
-          {block.content.caption && <figcaption className="mt-2 text-center text-sm text-gray-500 italic">{block.content.caption}</figcaption>}
-        </figure>
-      );
-    case 'video':
-      return (
-        <div key={block.id} className="my-8 rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          {block.content.src.includes('youtube') ? (
-            <iframe className="w-full h-[300px]" src={block.content.src.replace('/watch?v=', '/embed/')} title="Video" frameBorder="0" allowFullScreen loading="lazy" />
-          ) : (
-            <video className="w-full h-[300px] object-cover" poster={block.content.poster || undefined} controls preload="metadata">
-              <source src={block.content.src} type="video/mp4" />
-            </video>
-          )}
-        </div>
-      );
-    case 'audio':
-      return (
-        <div key={block.id} className="my-8 rounded-lg border border-gray-200 bg-gray-50 p-4">
-          <audio className="w-full" controls preload="metadata" src={block.content.src} />
-          {block.content.transcript && (
-            <div className="mt-4"><p className="text-sm font-semibold text-gray-900 mb-2">Transcript</p><p className="text-sm text-gray-600">{block.content.transcript}</p></div>
-          )}
-        </div>
-      );
-    case 'button':
-      return (
-        <div key={block.id} className={`my-8 flex justify-${block.content.alignment || 'center'}`}>
-          <a href={block.content.url || '#'} className={`px-6 py-3 rounded-lg text-white font-medium transition-colors ${block.content.style === 'primary' ? 'bg-gradient-to-r from-[#B28B53] to-[#9A7540]' : block.content.style === 'secondary' ? 'bg-gray-700' : 'border-2 border-[#B28B53] text-[#B28B53] bg-transparent'}`}>{block.content.text}</a>
-        </div>
-      );
-    case 'blockquote':
-      return (
-        <blockquote key={block.id} className="my-8 p-6 rounded-lg border-l-4 border-[#B28B53] bg-gray-50 italic text-gray-700">
-          <p className="text-lg">{block.content.text}</p>
-          {block.content.attribution && <p className="mt-4 text-right text-sm font-semibold text-gray-500">— {block.content.attribution}</p>}
-        </blockquote>
-      );
-    case 'callout':
-      return (
-        <div key={block.id} className="my-8 p-4 rounded-lg border-l-4" style={{ borderColor: block.content.type === 'info' ? '#3b82f6' : block.content.type === 'warning' ? '#f59e0b' : block.content.type === 'error' ? '#ef4444' : '#10b981', backgroundColor: block.content.type === 'info' ? '#eff6ff' : block.content.type === 'warning' ? '#fffbeb' : block.content.type === 'error' ? '#fef2f2' : '#dcfce7' }}>
-          <span className="font-bold mr-2">{block.content.type === 'info' ? 'ℹ️' : block.content.type === 'warning' ? '⚠️' : block.content.type === 'error' ? '❌' : '✅'}</span>
-          {block.content.text}
-        </div>
-      );
-    case 'faq':
-      return (
-        <div key={block.id} className="my-8 rounded-lg border border-gray-200 bg-gray-50 p-6">
-          <div className="flex items-start gap-2 mb-2"><span className="text-[#B28B53] font-bold text-sm">Q:</span><p className="text-gray-900">{block.content.question}</p></div>
-          <div className="flex items-start gap-2"><span className="text-gray-600 font-bold text-sm">A:</span><p className="text-gray-700">{block.content.answer}</p></div>
-        </div>
-      );
-    case 'divider':
-      return <hr key={block.id} className="my-8 border-0 border-t border-gray-200" />;
-    case 'spacer':
-      return <div key={block.id} className="my-4" style={{ height: block.content.height || '2rem' }} />;
-    case 'backlink':
-      return (
-        <div key={block.id} className="my-8">
-          <a href={block.content.url || '#'} className="text-[#B28B53] hover:underline font-medium" rel={block.content.rel === 'dofollow' ? undefined : block.content.rel}>{block.content.text || block.content.url}</a>
-        </div>
-      );
-    case 'embed':
-      return (
-        <div key={block.id} className="my-8 rounded-lg overflow-hidden border border-gray-200 max-w-md mx-auto">
-          <iframe className="w-full h-[300px]" src={block.content.url} title="Embed" frameBorder="0" loading="lazy" />
-        </div>
-      );
-    default:
-      return null;
-  }
-}
-
 export default async function BlogPostPage({
   params,
 }: {
@@ -147,6 +59,22 @@ export default async function BlogPostPage({
   if (!post) {
     notFound();
   }
+
+  useEffect(() => {
+    // Meta Pixel: ViewContent event for blog post
+    trackMeta('ViewContent', {
+      content_name: post.title,
+      content_category: 'blog',
+      content_type: 'article',
+      content_ids: [post.id],
+    });
+
+    // Microsoft Clarity: custom blog event
+    if (typeof window !== 'undefined' && (window as any).clarity) {
+      (window as any).clarity('set', 'blog_post_id', post.id);
+      (window as any).clarity('set', 'blog_post_slug', slug);
+    }
+  }, [slug, post]);
 
   const allPosts = await fetchBlogPosts();
   const relatedPosts = allPosts.filter((p) => p.slug !== slug).slice(0, 3);
@@ -213,11 +141,13 @@ export default async function BlogPostPage({
 
           <div className="space-y-5 text-gray-700 leading-relaxed">
             {post.blocks && post.blocks.length > 0 ? (
-              post.blocks.map((block: any) => <RenderBlock key={block.id} block={block} />)
+              <BlogBlockRenderer blocks={post.blocks} seoMeta={post.seoMeta} />
             ) : (
               post.content.map((paragraph, i) => <p key={i}>{paragraph}</p>)
             )}
           </div>
+
+          <SocialShare title={post.title} url={`${typeof window !== 'undefined' ? window.location.origin : ''}/blog/${slug}`} />
         </article>
 
         {relatedPosts.length > 0 && (
