@@ -141,7 +141,7 @@ export default async function BlogPostPage({
 
           <div className="space-y-5 text-gray-700 leading-relaxed">
             {post.blocks && post.blocks.length > 0 ? (
-              <BlogBlockRenderer blocks={post.blocks} seoMeta={post.seoMeta} />
+              <BlogBlockRenderer blocks={post.blocks} seoMeta={post.seoMeta} design={post.design} />
             ) : (
               post.content.map((paragraph, i) => <p key={i}>{paragraph}</p>)
             )}

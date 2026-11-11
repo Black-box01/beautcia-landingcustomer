@@ -8,15 +8,46 @@ import { faqPageSchema, howToSchema } from '@/lib/seo/schemas';
 interface BlockRendererProps {
   blocks: any[];
   seoMeta?: any;
+  design?: any;
 }
 
-export function BlogBlockRenderer({ blocks, seoMeta }: BlockRendererProps) {
+const TEMPLATE_CLASSES: Record<string, string> = {
+  'single-column': 'max-w-3xl mx-auto',
+  'two-column': 'max-w-6xl mx-auto grid grid-cols-2 gap-8',
+  grid: 'max-w-6xl mx-auto grid grid-cols-3 gap-8',
+  magazine: 'max-w-7xl mx-auto',
+  'full-width': 'max-w-none w-full',
+};
+
+const COLOR_SCHEME_CLASSES: Record<string, string> = {
+  default: 'text-gray-700',
+  warm: 'text-amber-900',
+  cool: 'text-slate-800',
+  minimal: 'text-gray-900',
+  dark: 'text-gray-200 bg-gray-900',
+};
+
+const FONT_SIZES: Record<string, string> = {
+  sm: '0.875rem',
+  base: '1rem',
+  lg: '1.125rem',
+  xl: '1.25rem',
+  '2xl': '1.5rem',
+};
+
+export function BlogBlockRenderer({ blocks, seoMeta, design = {} }: BlockRendererProps) {
+  const templateClass = TEMPLATE_CLASSES[design.template || 'single-column'] || TEMPLATE_CLASSES['single-column'];
+  const colorClass = COLOR_SCHEME_CLASSES[design.colorScheme || 'default'] || COLOR_SCHEME_CLASSES['default'];
+  const fontSize = FONT_SIZES[design.fontSize || 'base'] || FONT_SIZES['base'];
+
   const faqBlocks = blocks.filter((b: any) => b.type === 'faq');
   const howToBlocks = blocks.filter((b: any) => b.type === 'embed' || b.content?.schemaType === 'HowTo');
   const headingBlocks = blocks.filter((b: any) => b.type === 'heading');
 
   return (
-    <article className="prose prose-lg max-w-none">
+    <div className={`${templateClass} ${colorClass}`} style={{ fontFamily: design.fontFamily || 'inherit', fontSize }}>
+      {design.customCss && <style dangerouslySetInnerHTML={{ __html: design.customCss }} />}
+      <article className="prose prose-lg max-w-none">
       {faqBlocks.length > 0 && (
         <JsonLd data={faqPageSchema(faqBlocks.map((b: any) => ({ question: b.content.question, answer: b.content.answer })))}}
       )}
@@ -217,6 +248,7 @@ export function BlogBlockRenderer({ blocks, seoMeta }: BlockRendererProps) {
             return null;
         }
       })}
-    </article>
+      </article>
+    </div>
   );
 }
