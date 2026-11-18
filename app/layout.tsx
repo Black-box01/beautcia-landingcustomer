@@ -95,6 +95,13 @@ export default function RootLayout({
           <style>{`
             .no-js-show { display: block !important; }
           `}</style>
+          <img
+            height="1"
+            width="1"
+            alt=""
+            style={{ display: 'none' }}
+            src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+          />
         </noscript>
       
         {/* Google Analytics (gtag) */}
