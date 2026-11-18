@@ -96,6 +96,24 @@ export default function RootLayout({
             .no-js-show { display: block !important; }
           `}</style>
         </noscript>
+      
+        {/* Google Analytics (gtag) */}
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
+              `}
+            </Script>
+          </>
+        )}
       </head>
       <body style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
         <TrackingProvider>{children}</TrackingProvider>

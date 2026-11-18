@@ -1,6 +1,6 @@
 'use client';
 
-import { Share, Facebook, Twitter, LinkedIn, Mail } from 'lucide-react';
+import { Share, Facebook, X, LinkedIn, Mail } from 'lucide-react';
 
 interface SocialShareProps {
   title: string;
@@ -22,7 +22,7 @@ export function SocialShare({ title, url }: SocialShareProps) {
         <Facebook className="w-4 h-4" />
       </a>
       <a href={shareUrls.twitter} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg bg-[#1DA1F2] text-white hover:bg-[#0d8bd3] transition-colors" title="Share on X (Twitter)">
-        <Twitter className="w-4 h-4" />
+        <X className="w-4 h-4" />
       </a>
       <a href={shareUrls.linkedin} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg bg-[#0A66C2] text-white hover:bg:#004494] transition-colors" title="Share on LinkedIn">
         <LinkedIn className="w-4 h-4" />
