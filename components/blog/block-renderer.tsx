@@ -49,10 +49,10 @@ export function BlogBlockRenderer({ blocks, seoMeta, design = {} }: BlockRendere
       {design.customCss && <style dangerouslySetInnerHTML={{ __html: design.customCss }} />}
       <article className="prose prose-lg max-w-none">
       {faqBlocks.length > 0 && (
-        <JsonLd data={faqPageSchema(faqBlocks.map((b: any) => ({ question: b.content.question, answer: b.content.answer })))}}
+        <JsonLd data={faqPageSchema(faqBlocks.map((b: any) => ({ question: b.content.question, answer: b.content.answer })))} />
       )}
       {howToBlocks.length > 0 && (
-        <JsonLd data={howToSchema(howToBlocks.map((b: any) => ({ title: b.content.text || 'Step', description: b.content.text || '' })))}}
+        <JsonLd data={howToSchema(howToBlocks.map((b: any) => ({ title: b.content.text || 'Step', description: b.content.text || '' })))} />
       )}
 
       {blocks.map((block, index) => {

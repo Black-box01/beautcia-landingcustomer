@@ -7,8 +7,6 @@ import { JsonLd } from "@/lib/seo/JsonLd";
 import { articleSchema, breadcrumbSchema } from "@/lib/seo/schemas";
 import { BlogBlockRenderer } from "@/components/blog/block-renderer";
 import { SocialShare } from "@/components/blog/social-share";
-import { trackMeta } from "@/lib/tracking";
-import { useEffect } from "react";
 
 export const revalidate = 60;
 
