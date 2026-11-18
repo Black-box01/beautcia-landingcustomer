@@ -58,21 +58,6 @@ export default async function BlogPostPage({
     notFound();
   }
 
-  useEffect(() => {
-    // Meta Pixel: ViewContent event for blog post
-    trackMeta('ViewContent', {
-      content_name: post.title,
-      content_category: 'blog',
-      content_type: 'article',
-      content_ids: [post.id],
-    });
-
-    // Microsoft Clarity: custom blog event
-    if (typeof window !== 'undefined' && (window as any).clarity) {
-      (window as any).clarity('set', 'blog_post_id', post.id);
-      (window as any).clarity('set', 'blog_post_slug', slug);
-    }
-  }, [slug, post]);
 
   const allPosts = await fetchBlogPosts();
   const relatedPosts = allPosts.filter((p) => p.slug !== slug).slice(0, 3);

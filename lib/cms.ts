@@ -45,6 +45,7 @@ export interface BlogPost {
   content: string[];
   blocks?: any[];
   seoMeta?: any;
+  design?: any;
 }
 
 export interface ApiBlogPost {
@@ -55,6 +56,7 @@ export interface ApiBlogPost {
   content: string;
   blocks?: any[];
   seoMeta?: any;
+  design?: any;
   image: string | null;
   author: string;
   status: string;
@@ -103,6 +105,7 @@ function mapBlogPost(post: ApiBlogPost): BlogPost {
     content: paragraphs,
     blocks: blocks.length > 0 ? blocks : undefined,
     seoMeta: post.seoMeta || undefined,
+    design: post.design || undefined,
   };
 }
 

@@ -185,7 +185,7 @@ export function BlogBlockRenderer({ blocks, seoMeta, design = {} }: BlockRendere
             );
           case 'callout':
             return (
-              <div key={index} className="my-8 p-4 rounded-lg" className={block.content.type === 'info' ? 'border-l-4 border-blue-500 bg-blue-50 text-blue-700' : block.content.type === 'warning' ? 'border-l-4 border-amber-500 bg-amber-50 text-amber-700' : block.content.type === 'error' ? 'border-l-4 border-red-500 bg-red-50 text-red-700' : 'border-l-4 border-emerald-500 bg-emerald-50 text-emerald-700'}>
+              <div key={index} className={`my-8 p-4 rounded-lg ${block.content.type === 'info' ? 'border-l-4 border-blue-500 bg-blue-50 text-blue-700' : block.content.type === 'warning' ? 'border-l-4 border-amber-500 bg-amber-50 text-amber-700' : block.content.type === 'error' ? 'border-l-4 border-red-500 bg-red-50 text-red-700' : 'border-l-4 border-emerald-500 bg-emerald-50 text-emerald-700'}`}>
                 <span className="font-bold mr-2">{block.content.type === 'info' ? 'ℹ️' : block.content.type === 'warning' ? '⚠️' : block.content.type === 'error' ? '❌' : '✅'}</span>
                 {block.content.text}
               </div>
