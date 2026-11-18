@@ -153,8 +153,9 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Microsoft Clarity */}
-        <Script id="clarity" strategy="afterInteractive">
+        {/* Microsoft Clarity — id must not be "clarity": the id creates a global
+            window.clarity element reference that shadows Clarity's queue function. */}
+        <Script id="ms-clarity" strategy="afterInteractive">
           {`
             (function(c,l,a,r,i,t,y){
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
